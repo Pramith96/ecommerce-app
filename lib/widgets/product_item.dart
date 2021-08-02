@@ -3,6 +3,8 @@ import 'package:project/providers/cart.dart';
 import 'package:project/screens/product_detail_screen.dart';
 import 'package:provider/provider.dart';
 import '../providers/product.dart';
+//import 'package:flushbar/flushbar.dart';
+import 'package:another_flushbar/flushbar.dart';
 
 class ProductItem extends StatelessWidget {
   // final String id;
@@ -61,11 +63,35 @@ class ProductItem extends StatelessWidget {
             onPressed: () {
               cart.addItem(
                   product.id, product.price, product.title, product.imgUrl);
+              _showTopBar(context);
             },
+
             // color: Theme.of(context).accentColor,
           ),
         ),
       ),
     );
   }
+
+  void _showTopBar(BuildContext context) => Flushbar(
+        icon: Icon(
+          Icons.add_task_rounded,
+          size: 32,
+          color: Colors.white,
+        ),
+        message: "Item added to the cart!",
+        duration: Duration(seconds: 2),
+        flushbarPosition: FlushbarPosition.TOP,
+        mainButton: TextButton(
+          child: Text('Undo'),
+          onPressed: () {
+            Provider.of<Cart>(context, listen: false).removeSingleItem(
+                Provider.of<Product>(context, listen: false).id);
+          },
+        ),
+        borderRadius: BorderRadius.circular(16),
+        margin: EdgeInsets.fromLTRB(8, kToolbarHeight + 8, 8, 0),
+        barBlur: 20,
+        backgroundColor: Colors.black.withOpacity(0.5),
+      )..show(context);
 }
